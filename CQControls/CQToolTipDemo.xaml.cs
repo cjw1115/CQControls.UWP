@@ -59,5 +59,58 @@ namespace CQControls
             var value = (VerticalAlignment)Enum.Parse(typeof(VerticalAlignment), name);
             cqtooltip.VerticalAlignment = value;
         }
+
+
+        public void MakePath()
+        {
+        }
+
+        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var grid = sender as Grid;
+            //Windows.UI.Xaml.Shapes.Path
+            var width = grid.ActualWidth+20;
+            var height = 3*grid.ActualHeight/2;
+
+            
+            var root = VisualTreeHelper.GetParent(grid) as Grid;
+            root.Height = height;
+            root.Width = width;
+            var path = Helpers.VisualTreeHelperTool.FindNamedVisualChild<Windows.UI.Xaml.Shapes.Path>(root, "borderPath");
+
+            var geometry = new PathGeometry();
+            geometry.Figures = new PathFigureCollection();
+
+            var arrowHeight = 6;
+            grid.Margin = new Thickness(grid.Margin.Left, grid.Margin.Top, grid.Margin.Right, arrowHeight);
+
+            var figure = new PathFigure();
+            figure.Segments = new PathSegmentCollection();
+            figure.StartPoint = new Point(10, 0);
+
+            figure.Segments.Add(new LineSegment() { Point = new Point(width - 10, 0) });
+            figure.Segments.Add(new ArcSegment() { Point = new Point(width , 10),SweepDirection= SweepDirection.Clockwise, Size=new Size(10,10) });
+
+            figure.Segments.Add(new LineSegment() { Point = new Point(width , height-10 - arrowHeight) });
+
+            figure.Segments.Add(new ArcSegment() { Point = new Point(width-10, height- arrowHeight), SweepDirection = SweepDirection.Clockwise, Size = new Size(10, 10) });
+
+            figure.Segments.Add(new LineSegment() { Point = new Point(width / 2 + arrowHeight, height - arrowHeight) });
+            figure.Segments.Add(new LineSegment() { Point = new Point(width / 2, height) });
+            figure.Segments.Add(new LineSegment() { Point = new Point(width / 2 - arrowHeight, height - arrowHeight) });
+
+
+            figure.Segments.Add(new LineSegment() { Point = new Point(10, height- arrowHeight) });
+
+            figure.Segments.Add(new ArcSegment() { Point = new Point(0, height-10- arrowHeight), SweepDirection = SweepDirection.Clockwise, Size = new Size(10, 10) });
+
+            figure.Segments.Add(new LineSegment() { Point = new Point(0, 10) });
+
+            figure.Segments.Add(new ArcSegment() { Point = new Point(10, 0), SweepDirection = SweepDirection.Clockwise, Size = new Size(10, 10) });
+
+            geometry.Figures.Add(figure);
+
+            path.Data = geometry;
+        }
     }
 }

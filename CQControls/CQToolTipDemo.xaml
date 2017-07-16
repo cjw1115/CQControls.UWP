@@ -10,23 +10,38 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Margin="8">
-            <TextBox x:Name="textbox" Width="150" HorizontalAlignment="Left" Text="" PlaceholderText="Text Tip"></TextBox>
+            <TextBox x:Name="textbox" Width="150" HorizontalAlignment="Left" Text="" PlaceholderText="Text Tip">
+                <ToolTipService.ToolTip>
+                    <ToolTip Content="type tip message"/>
+                </ToolTipService.ToolTip>
+            </TextBox>
             <ComboBox x:Name="horizentalList" Header="Horizental Settting" SelectionChanged="horizentalList_SelectionChanged"></ComboBox>
             <ComboBox x:Name="verticalList" Header="Vertical Setting" SelectionChanged="verticalList_SelectionChanged"></ComboBox>
         </StackPanel>
         <Button HorizontalAlignment="Center" VerticalAlignment="Center" Content="Point me to see">
             <controls:CQToolTipService.CQToolTip>
-                <controls:CQToolTip x:Name="cqtooltip" Content="{x:Bind textbox.Text,Mode=OneWay}">
+                <controls:CQToolTip x:Name="cqtooltip" DelayTime="500" Duration="4000" IsForever="True">
+                    <controls:CQToolTip.Content>
+                        <TextBlock Text="{x:Bind textbox.Text,Mode=OneWay}" TextAlignment="Center" TextWrapping="Wrap"></TextBlock>
+                    </controls:CQToolTip.Content>
                     <controls:CQToolTip.Template>
                         <ControlTemplate>
-                            <Grid Margin="20">
-                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Red" Stroke="Black" StrokeDashArray="2,2"/>
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
+                            <Grid x:Name="rootGrid" Margin="4">
+                                <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <Path x:Name="borderPath" Stroke="Red" StrokeThickness="3">
+                                        
+                                    </Path>
+                                </Canvas>
+                                <Grid SizeChanged="Grid_SizeChanged" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                      MaxWidth="200" VerticalAlignment="Center"></ContentPresenter>
+                                </Grid>
                             </Grid>
                         </ControlTemplate>
                     </controls:CQToolTip.Template>
                 </controls:CQToolTip>
             </controls:CQToolTipService.CQToolTip>
         </Button>
+       
     </Grid>
 </Page>

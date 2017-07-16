@@ -99,6 +99,7 @@
     <Compile Include="CQToolTipDemo.xaml.cs">
       <DependentUpon>CQToolTipDemo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\VisualTreeHelperTool.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -109,6 +110,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="CQControls_TemporaryKey.pfx" />
+    <None Include="Design\projectGuides.guides" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />

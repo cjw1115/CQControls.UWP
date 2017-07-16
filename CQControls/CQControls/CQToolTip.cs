@@ -82,9 +82,68 @@ namespace CQControls
             var sender = d as CQToolTip;
             sender.OnIsOpenPropertyChanged();
         }
+
+        DispatcherTimer delayTimer;
+        DispatcherTimer durationTimer;
         public void OnIsOpenPropertyChanged()
-        {   
-            root.IsOpen = IsOpen;
+        {
+            if (IsOpen)
+            {
+                if (DelayTime == 0)
+                {
+                    Open();
+                }
+                else
+                {
+                    delayTimer = new DispatcherTimer();
+                    delayTimer.Interval = TimeSpan.FromMilliseconds(DelayTime);
+                    delayTimer.Tick += DelayTick;
+                    delayTimer.Start();
+                }
+            }
+            else
+            {
+                if (delayTimer != null)
+                {
+                    delayTimer.Tick -= DelayTick;
+                }
+                if (durationTimer != null)
+                {
+                    durationTimer.Tick -= DurationTick;
+                }
+
+                delayTimer = null;
+                durationTimer = null;
+
+                root.IsOpen = false;
+
+            }
+        }
+        private async void DelayTick(object o,object e)
+        {
+            await root.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                Open();
+            });
+
+        }
+        private async void DurationTick(object o,object e)
+        {
+            await root.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                root.IsOpen = false;
+            });
+        }
+        private void Open()
+        {
+            root.IsOpen = true;
+            if (IsForever != true)
+            {
+                durationTimer = new DispatcherTimer();
+                durationTimer.Interval = TimeSpan.FromMilliseconds(Duration);
+                durationTimer.Tick += DurationTick;
+                durationTimer.Start();
+            }
         }
 
         public object Content
@@ -205,6 +264,26 @@ namespace CQControls
             _translateTransform.X = rootPos.X;
             _translateTransform.Y = rootPos.Y;
 
+        }
+
+        public static  readonly DependencyProperty DelayTimeProperty = DependencyProperty.Register("DelayTime", typeof(int), typeof(CQToolTip), new PropertyMetadata(0));
+        public int DelayTime
+        {
+            get { return (int)this.GetValue(DelayTimeProperty); }
+            set { SetValue(DelayTimeProperty, value); }
+        }
+        public static readonly DependencyProperty DurationProperty = DependencyProperty.Register("Duration", typeof(int), typeof(CQToolTip), new PropertyMetadata(3000));
+        public int Duration
+        {
+            get { return (int)this.GetValue(DurationProperty); }
+            set { SetValue(DurationProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsForeverProperty = DependencyProperty.Register("IsForever", typeof(bool), typeof(CQToolTip), new PropertyMetadata(false));
+        public bool IsForever
+        {
+            get { return (bool)this.GetValue(IsForeverProperty); }
+            set { SetValue(IsForeverProperty, value); }
         }
 
     }
