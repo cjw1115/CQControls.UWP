@@ -247,7 +247,7 @@ namespace CQControls
             else if (this.HorizontalAlignment == HorizontalAlignment.Right && this.VerticalAlignment == VerticalAlignment.Top)
             {
                 rootPos.X += this.TargetControl.ActualWidth-this.Width;
-                rootPos.Y += -this.TargetControl.ActualHeight;
+                rootPos.Y += -this.Height;
             }
             else if (this.HorizontalAlignment == HorizontalAlignment.Right && (this.VerticalAlignment == VerticalAlignment.Center || this.VerticalAlignment == VerticalAlignment.Stretch))
             {
