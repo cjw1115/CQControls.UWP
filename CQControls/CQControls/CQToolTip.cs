@@ -19,7 +19,9 @@ namespace CQControls
     public sealed class CQToolTip : Control
     {
         Popup root;
-        ContentControl _contentControl;
+        private ContentControl _contentControl;
+
+        public ContentControl ContentControl => _contentControl;
 
         private FrameworkElement _targetControl;
 
